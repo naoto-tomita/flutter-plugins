@@ -29,8 +29,12 @@ public class NotificationListener extends NotificationListenerService {
       return;
     }
 
-    // Retrieve package name to set as title.
     String packageName = notification.getPackageName();
+    // Check if packageName is null and assign default if necessary
+    if (packageName == null) {
+      packageName = DEFAULT_PACKAGE_NAME; // デフォルトのパッケージ名を使用
+    }
+    
     // Retrieve extra object from notification to extract payload.
     Bundle extras = notification.getNotification().extras;
 
