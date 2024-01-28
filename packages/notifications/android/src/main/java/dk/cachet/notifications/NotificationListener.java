@@ -10,7 +10,8 @@ import android.service.notification.StatusBarNotification;
 import androidx.annotation.RequiresApi;
 
 /**
- * Notification listening service. Intercepts notifications if permission is given to do so.
+ * Notification listening service. Intercepts notifications if permission is
+ * given to do so.
  */
 @SuppressLint("OverrideAbstract")
 @RequiresApi(api = VERSION_CODES.JELLY_BEAN_MR2)
@@ -32,27 +33,28 @@ public class NotificationListener extends NotificationListenerService {
     String packageName = notification.getPackageName();
     // Check if packageName is null and assign default if necessary
     if (packageName == null) {
-      packageName = DEFAULT_PACKAGE_NAME; // デフォルトのパッケージ名を使用
+      packageName = DEFAULT_PACKAGE_NAME;
     }
-    
-    // Retrieve extra object from notification to extract payload.
-    Bundle extras = notification.getNotification().extras;
 
     // Pass data from one activity to another.
     Intent intent = new Intent(NOTIFICATION_INTENT);
     intent.putExtra(NOTIFICATION_PACKAGE_NAME, packageName);
 
-    if (extras != null) {
-      CharSequence title = extras.getCharSequence(Notification.EXTRA_TITLE);
-      CharSequence text = extras.getCharSequence(Notification.EXTRA_TEXT);
-
-      // Convert CharSequence to String safely
-      String titleStr = title != null ? title.toString() : "";
-      String textStr = text != null ? text.toString() : "";
-
-      intent.putExtra(NOTIFICATION_TITLE, titleStr);
-      intent.putExtra(NOTIFICATION_MESSAGE, textStr);
+    // Retrieve extra object from notification to extract payload.
+    Bundle extras = notification.getNotification().extras;
+    if (extras == null) {
+      return; // extras が null の場合は処理を中断
     }
+    CharSequence title = extras.getCharSequence(Notification.EXTRA_TITLE);
+    CharSequence text = extras.getCharSequence(Notification.EXTRA_TEXT);
+
+    // Convert CharSequence to String safely
+    String titleStr = title != null ? title.toString() : "";
+    String textStr = text != null ? text.toString() : "";
+
+    intent.putExtra(NOTIFICATION_TITLE, titleStr);
+    intent.putExtra(NOTIFICATION_MESSAGE, textStr);
+
     sendBroadcast(intent);
   }
 }
